@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User</title>
+</head>
+<body>
+
+<p th:text="${user.getName()}">VALUE</p>
+<p th:text="${user.getLastName()}">VALUE</p>
+<p th:text="${user.getAge()}">VALUE</p>
+<p th:text="${user.getId()}">VALUE</p>
+<p th:text="${user.getRoles()}">VALUE</p>
+
+<form th:action="@{/logout}" method="post">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  <button type="submit" class="btn btn-link">Выйти</button>
+</form>
+
+<div>
+  <a th:href="@{/admin/index}" class="btn btn-primary">
+    <i class="fas fa-cog"></i> Перейти к списку пользователей
+  </a>
+</div>
+
+</body>
+</html>
