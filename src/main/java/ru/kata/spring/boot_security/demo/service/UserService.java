@@ -12,6 +12,7 @@ import ru.kata.spring.boot_security.demo.Dao.UserDaoInterface;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -66,8 +67,8 @@ public class UserService implements UserServiceInterface, UserDetailsService {
 
     @Override
     @Transactional
-    public void deleteUserById(Integer id) {
-        userDao.deleteById(id);
+    public void deleteUserById(Integer id, Principal principal) {
+        userDao.deleteById(id, principal);
     }
 
     @Override

@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.models.Role;
 import  ru.kata.spring.boot_security.demo.models.User;
 
 import javax.persistence.*;
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -91,10 +92,19 @@ public class UserDao implements UserDaoInterface {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id, Principal principal) {
         User user = em.find(User.class, id);
         if (user != null) {
-            em.remove(user);
+            // Проверяем, не удаляет ли пользователь сам себя
+            if (principal != null && principal.getName().equals(user.getUsername())) {
+                // Если пользователь удаляет себя - выполняем специальную логику
+                em.remove(user);
+                // Делаем программный logout
+                SecurityContextHolder.clearContext();
+            } else {
+                // Обычное удаление другого пользователя
+                em.remove(user);
+            }
         }
     }
     @Override

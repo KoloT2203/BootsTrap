@@ -12,6 +12,7 @@
             border: 1px solid #dee2e6;
             border-radius: 5px;
         }
+
         .form-title {
             margin-bottom: 20px;
             padding-bottom: 10px;
@@ -23,7 +24,7 @@
 <div th:fragment="newUser">
     <div class="form-container">
         <h3 class="form-title">Add new user</h3>
-        <form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
+        <form th:method="POST" th:action="@{/admin/new}" th:object="${formUser}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
             <div class="mb-3">
@@ -40,7 +41,7 @@
 
             <div class="mb-3">
                 <label for="age" class="form-label">Age</label>
-                <input type="number" class="form-control" th:field="*{age}" id="age">
+                <input type="text" class="form-control" th:field="*{age}" id="age">
                 <div class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
             </div>
 
