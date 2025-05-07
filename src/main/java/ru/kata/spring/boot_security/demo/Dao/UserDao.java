@@ -55,7 +55,12 @@ public class UserDao implements UserDaoInterface {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
         String check = "";
-
+        if (index().stream()
+                .filter(x -> x.getUsername().equals(updateUser.getUsername()))
+                .findAny()
+                .orElse(null) != null && !updateUser.getUsername().equals(getUserById(id).getUsername())){
+            return;
+        }
         User user = em.find(User.class, id);
         if (user.getUsername().equals(userDetails.getUsername())) {
             check = "admin";
@@ -73,7 +78,6 @@ public class UserDao implements UserDaoInterface {
             }
             managedRoles.add(persistentRole);
         }
-
         user.getRoles().clear();
         user.getRoles().addAll(managedRoles);
         user.setAge(updateUser.getAge());
@@ -95,14 +99,10 @@ public class UserDao implements UserDaoInterface {
     public void deleteById(Integer id, Principal principal) {
         User user = em.find(User.class, id);
         if (user != null) {
-            // Проверяем, не удаляет ли пользователь сам себя
             if (principal != null && principal.getName().equals(user.getUsername())) {
-                // Если пользователь удаляет себя - выполняем специальную логику
                 em.remove(user);
-                // Делаем программный logout
                 SecurityContextHolder.clearContext();
             } else {
-                // Обычное удаление другого пользователя
                 em.remove(user);
             }
         }

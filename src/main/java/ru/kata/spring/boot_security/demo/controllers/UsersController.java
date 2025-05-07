@@ -68,11 +68,17 @@ public class UsersController {
                          Authentication auth,
                          Model model) {
         UserDetails currentUser = userService.loadUserByUsername(auth.getName());
-        if (currentUser.getUsername().equals(user.getUsername())) {
-            model.addAttribute("errorMessage", "Username is already taken!");
-            return "/admin/edit";
-        }
+        model.addAttribute("formUser", new User());
+        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("roles", userService.getRoles());
         userService.updateUser(id, user);
+        if (currentUser.getUsername().equals(user.getUsername()) && user.getRoles().isEmpty()){
+            return "redirect:/login?logout";
+        }
+        if (currentUser.getUsername().equals(user.getUsername()) &&
+                user.getRoles().stream().noneMatch(x -> x.getName().equals("ROLE_ADMIN"))) {
+            return "redirect:/user";
+        }
         return "redirect:/admin/index";
     }
 
